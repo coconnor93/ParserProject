@@ -1,14 +1,12 @@
 package testProj;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ParserTest {
 
@@ -20,6 +18,22 @@ public class ParserTest {
 		public String filename;
 		public String mode;
 
+		public String getFilename() {
+			return filename;
+		}
+
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+
+		public String getMode() {
+			return mode;
+		}
+
+		public void setMode(String mode) {
+			this.mode = mode;
+		}
+
 		public String toString() {
 			return filename + " (" + mode + ")";
 		}
@@ -30,6 +44,77 @@ public class ParserTest {
 		public String author;
 		public String message;
 		List<CommitFile> files;
+
+		public String getCommit() {
+			return commit;
+		}
+
+		public void setCommit(String commit) {
+			this.commit = commit;
+		}
+
+		public String getAuthor() {
+			return author;
+		}
+
+		public void setAuthor(String author) {
+			this.author = author;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		public List<CommitFile> getFiles() {
+			return files;
+		}
+
+		public void setFiles(List<CommitFile> files) {
+			this.files = files;
+		}
+
+	}
+
+	public void sortClasses(String filePath) throws FileNotFoundException {
+		Scanner input = new Scanner(new File(filePath));
+		List<CommitFile> files = new ArrayList<CommitFile>();
+		ArrayList<String> totalFiles = new ArrayList<String>();
+
+		boolean finishedReading = false;
+		String line = "";
+
+		while (input.hasNext()) {
+			if (!finishedReading) {
+				line = input.nextLine().trim();
+			} else {
+				finishedReading = false;
+			}
+
+			String[] parts = line.split("\t");
+			if (parts.length > 1 && parts[0].length() == 1) {
+				CommitFile f = new CommitFile();
+				f.filename = parts[1];
+				f.mode = parts[0];
+				files.add(f);
+				//int loopMax = files.size() / 100;
+				System.out.println(f);
+				String fileAdded = "";
+				for (int i = 0; i < 0.38; i++) {
+					fileAdded = f.getFilename();
+					totalFiles.add(fileAdded);
+				}
+			}
+		}
+
+		totalFiles = (ArrayList<String>) totalFiles.stream().distinct().collect(Collectors.toList());
+		totalFiles.sort(String::compareToIgnoreCase);
+		System.out.println(totalFiles);
+		int totalFileCount = totalFiles.size();
+		System.out.println("TOTAL FILE COUNT: " +totalFileCount);
 	}
 
 	public void readFile(String filePath) throws FileNotFoundException {
@@ -40,22 +125,20 @@ public class ParserTest {
 		String commit = "";
 		String author = "";
 		String message = "";
-		// int commitCount = 0;
 
 		List<CommitFile> files = new ArrayList<CommitFile>();
 
-		boolean alreadyReadLine = false;
+		boolean finishedReading = false;
 
 		String line = "";
 
 		while (input.hasNext()) {
-			if (!alreadyReadLine) {
+			if (!finishedReading) {
 				line = input.nextLine().trim();
-				System.out.println(">> " + line);
+				// System.out.println(">> " + line);
 			} else {
-				alreadyReadLine = false;
+				finishedReading = false;
 			}
-			// System.out.println("INPUT: ["+line+"]");
 
 			if (location == Block.DATA) {
 				if (line.equalsIgnoreCase(""))
@@ -71,18 +154,14 @@ public class ParserTest {
 				}
 			} else if (location == Block.MESSAGE) {
 				if (line.equalsIgnoreCase("")) {
-					// location = Block.FILES;
 				} else if (line.indexOf("commit") == 0) {
 					location = Block.SAVE;
-					alreadyReadLine = true;
+					finishedReading = true;
 				} else {
-					// Test if files or still message
 					String[] parts = line.split("\t");
 					if (parts.length > 1 && parts[0].length() == 1) {
-						// System.out.println("P: "+parts.toString());
-						// Files!
 						location = Block.FILES;
-						alreadyReadLine = true;
+						finishedReading = true;
 					} else {
 						message += line;
 					}
@@ -93,7 +172,7 @@ public class ParserTest {
 				} else {
 					if (line.indexOf("commit") == 0) {
 						location = Block.SAVE;
-						alreadyReadLine = true;
+						finishedReading = true;
 					} else {
 						String[] parts = line.split("\t");
 						CommitFile f = new CommitFile();
@@ -105,23 +184,19 @@ public class ParserTest {
 			}
 
 			if (location == Block.SAVE || !input.hasNext()) {
-				// END OF DATA.. SAVE AND START AGAIN
-				// 1. Save that commit somewhere - memory as a class whatever
-				// 2. Blank all the container strings and the files list
-				// 3. Reset mode to be data again
-
 				Commit c = new Commit();
 				c.author = author;
 				c.commit = commit;
 				c.message = message;
 				c.files = files;
+				// int fileCount = 0;
 
 				// System.out.println("Commit: "+commit+" by "+author);
 
 				commits.add(c);
-				// commitCount++;
 
-				System.out.println("The commit:  " + commit + " contains these files: " + files.toString());
+				System.out.println("The commit: " + commit + " contains these files: " + files.toString());
+				// System.out.println(files.toString());
 
 				author = "";
 				commit = "";
@@ -135,7 +210,10 @@ public class ParserTest {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		ParserTest test = new ParserTest();
-		test.readFile("C:\\Users\\Smithers\\gitdemo\\java_1\\log.txt");
+		// test.sortClasses("C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt");
+		test.sortClasses("C:\\Users\\Smithers\\gitdemo\\java_1\\log.txt");
+		// test.readFile("C:\\Users\\Smithers\\gitdemo\\java_1\\log.txt");
+		// test.readFile("C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt");
 		// test.readFile("C:\\Users\\Smithers\\gitdemo\\squaresquash\\log.txt");
 		// test.readFile("C:\\Users\\Smithers\\gitdemo\\wikishare\\log.txt");
 		// test.readFile("C:\\Users\\Smithers\\gitdemo\\javachat\\log.txt");
