@@ -1,11 +1,11 @@
 package testProj;
 
 import java.awt.*;
-import java.util.Random;
-
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.*;
 
-public class SwingTest extends JPanel implements Runnable {
+public class SwingTest extends JPanel implements Runnable, KeyListener {
 	public class Circle {
 		int xValue;
 		int yValue;
@@ -47,7 +47,6 @@ public class SwingTest extends JPanel implements Runnable {
 		int redValue;
 		int greenValue;
 		int blueValue;
-
 		int decayRate = 10;
 
 		public void touchWhite() {
@@ -55,25 +54,24 @@ public class SwingTest extends JPanel implements Runnable {
 			greenValue = 255;
 			blueValue = 255;
 		}
-		
+
 		public void touchRed() {
 			redValue = 255;
 			greenValue = 0;
 			blueValue = 0;
 		}
-		
+
 		public void touchBlue() {
 			redValue = 0;
 			greenValue = 0;
 			blueValue = 255;
 		}
-		
+
 		public void touchGreen() {
 			redValue = 0;
 			greenValue = 255;
 			blueValue = 0;
 		}
-		
 
 		public void Decay() {
 			redValue -= decayRate;
@@ -93,8 +91,6 @@ public class SwingTest extends JPanel implements Runnable {
 		}
 	}
 
-	JFrame frame;
-	JPanel panel;
 	java.util.List<Circle> circles;
 	int number;
 	int x;
@@ -102,22 +98,12 @@ public class SwingTest extends JPanel implements Runnable {
 	int xsize = 250;
 	int ysize = xsize;
 	int diameter;
-
 	boolean quit = false;
-
 	private static final long serialVersionUID = 1L;
-
-	public SwingTest(int n) {
-		number = n;
-		frame = new JFrame();
-		panel = this;
-		circles = new java.util.ArrayList<Circle>();
-
-		x = (int) Math.ceil(Math.sqrt((double) n));
-		y = x;
-
-		diameter = (xsize / x) - 1;
-
+	
+	private void initUI(){
+		JFrame frame = new JFrame();
+		JPanel panel = this;
 		frame.setContentPane(panel);
 		frame.setTitle("Project Display");
 		frame.pack();
@@ -125,6 +111,15 @@ public class SwingTest extends JPanel implements Runnable {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+	}
+
+	public SwingTest(int n) {
+		initUI();
+		number = n;
+		circles = new java.util.ArrayList<Circle>();
+		x = (int) Math.ceil(Math.sqrt((double) n));
+		y = x;
+		diameter = (xsize / x) - 1;
 
 		for (int i = 0; i < n; i++) {
 			Circle c = new Circle();
@@ -138,57 +133,44 @@ public class SwingTest extends JPanel implements Runnable {
 			circles.add(c);
 		}
 
-		this.run();
+		//this.run();
 	}
 
 	@Override
 	public synchronized void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(new Color(0x17202a));
+		//setBackground(Color.white);
+		int angle = 12;
+		int initialRadius = 1;
+		int radiusIncrease = 2;
+		int angleStep = 8;
+		int radius = initialRadius;
+		Insets insets = getInsets();
+		int w = (int) ((xsize - insets.left - insets.right) / 2);
+		int h = (int) ((ysize - insets.top - insets.bottom) / 2);
+		g.translate(w, h);
 
 		for (Circle c : circles) {
 			g.setColor(c.getColor());
-			g.fillOval(c.xValue, c.yValue, c.diameter, c.diameter);
-			int initialRadius = 8;
-			int radiusIncrease = 2;
-			int angleStep = 12;
 			c.xValue = xsize / 2;
 			c.yValue = ysize / 2;
-			int angle = 10;
-			int radius = initialRadius;
-			for (int p = 0; p < circles.size(); ++p) {
-				int xp = c.xValue + (int) (Math.sin(Math.toRadians((double) angle)) * radius);
-				int yp = c.yValue + (int) (Math.cos(Math.toRadians((double) angle)) * radius);
-				g.fillOval(xp, yp, c.diameter, c.diameter);
-				angle += angleStep;
-				radius += radiusIncrease;
-			}
+			int xp = c.xValue + (int) (Math.sin(Math.toRadians((double) angle)) * radius);
+			int yp = c.yValue + (int) (Math.cos(Math.toRadians((double) angle)) * radius);
+			g.fillOval(xp, yp, c.diameter, c.diameter);
+			angle += angleStep;
+			radius += radiusIncrease;
+		
 		}
 	}
 
 	public static void main(String[] args) {
-		SwingTest test = new SwingTest(100);
+		SwingTest test = new SwingTest(150);
 	}
 
 	@Override
 	public void run() {
 		while (!quit) {
-			Random r = new Random();
-			int chance = r.nextInt(100);
-
-			if (chance <= 25) {
-				int x = r.nextInt(number);
-				circles.get(x).touchWhite();
-			} else if (chance <=50){
-				int x = r.nextInt(number);
-				circles.get(x).touchBlue();
-			}	else if (chance <=75){
-				int x = r.nextInt(number);
-				circles.get(x).touchRed();
-			}	else if (chance <=100){
-				int x = r.nextInt(number);
-				circles.get(x).touchGreen();
-			}
 
 			for (Circle c : circles)
 				c.Decay();
@@ -202,6 +184,20 @@ public class SwingTest extends JPanel implements Runnable {
 				e.printStackTrace();
 			}
 		}
-
 	}
+	
+	public void Decay()
+	{
+		for (Circle c : circles)
+			c.Decay();
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
 }
