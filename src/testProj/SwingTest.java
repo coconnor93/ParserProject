@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 
 public class SwingTest extends JPanel implements Runnable, KeyListener {
+	/*
 	public class Circle {
 		int xValue;
 		int yValue;
@@ -89,7 +90,7 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 			colour = new Color(redValue, greenValue, blueValue);
 			return colour;
 		}
-	}
+	}*/
 
 	java.util.List<Circle> circles;
 	int number;
@@ -139,10 +140,10 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 	@Override
 	public synchronized void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		setBackground(new Color(0x17202a));
-		//setBackground(Color.white);
-		int angle = 12;
-		int initialRadius = 1;
+		//setBackground(new Color(0x17202a));
+		setBackground(Color.white);
+		int angle = 25;
+		int initialRadius = 6;
 		int radiusIncrease = 2;
 		int angleStep = 8;
 		int radius = initialRadius;
@@ -180,7 +181,6 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
