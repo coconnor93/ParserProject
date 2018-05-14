@@ -3,9 +3,7 @@ package testProj;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.util.Iterator;
 import javax.swing.*;
-import testProj.ParserTest.Commit;
 
 public class GUI extends JFrame {
 
@@ -19,7 +17,6 @@ public class GUI extends JFrame {
 	FlowLayout flowLayout = new FlowLayout(align, hgap, vgap);
 	private ParserTest parse;
 	private SwingTest swing = null;
-	private Iterator<Commit> commitIterator;
 	private String selectedProject;
 
 	public GUI() {

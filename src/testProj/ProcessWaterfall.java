@@ -28,11 +28,8 @@ public class ProcessWaterfall {
 			System.exit(0);
 		}
 
-		System.out.println("Starting to iterate");
-
 		commitIterator = parse.getCommits().iterator();
 		boolean quit = false;
-		// wf.RandomLine(parse.getTotalFileCount());
 
 		while (!quit) {
 			if (commitIterator.hasNext()) {

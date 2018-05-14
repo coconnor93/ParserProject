@@ -45,24 +45,6 @@ public class Waterfall extends JPanel {
 		x = (int) Math.ceil(Math.sqrt((double) numberOfCircles));
 		y = x;
 		diameter = (250 / x) - 1;
-/*
-		for (int h = 0; h < 1; h++) {
-			AddLine(RandomLine(numberOfCircles));
-		}
-*/
-/*
-		while (!quit) {
-			this.repaint();
-
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			AddLine(RandomLine(numberOfCircles));
-		}
-*/
 	}
 
 	public void AddLine(ArrayList<Circle> newLine) {
