@@ -1,19 +1,22 @@
 package testProj;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Iterator;
+
 import testProj.ParserTest.Commit;
 import testProj.ParserTest.CommitFile;
 
-public class ProcessTest implements Runnable {
+public class ProcessWaterfall {
 
 	private String filePath = "C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt";
 	private ParserTest parse = new ParserTest();
-	private SwingTest swing = null;
+	private Waterfall wf = new Waterfall();
 	private Iterator<Commit> commitIterator;
+	private Circle c = new Circle();
 
-	public static void main(String args[]) throws FileNotFoundException {
-		ProcessTest p = new ProcessTest();
+	public static void main(String[] args) throws FileNotFoundException {
+		ProcessWaterfall p = new ProcessWaterfall();
 		p.run();
 	}
 
@@ -21,39 +24,54 @@ public class ProcessTest implements Runnable {
 		try {
 			parse.readFile(filePath);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
 
+		System.out.println("Starting to iterate");
+
 		commitIterator = parse.getCommits().iterator();
 		boolean quit = false;
-		swing = new SwingTest(parse.getTotalFileCount());
+		// wf.RandomLine(parse.getTotalFileCount());
 
 		while (!quit) {
 			if (commitIterator.hasNext()) {
+				wf.Decay();
 				Commit c = commitIterator.next();
+				ArrayList<Circle> newLine = new ArrayList<Circle>();
+
+				for (int i = 0; i < parse.getTotalFileCount(); ++i) {
+					int xrange = 800;
+					int diameter = xrange / parse.getTotalFileCount();
+					Circle cn = new Circle();
+					cn.xValue = (diameter + 1) * i;
+					cn.yValue = 0;
+					cn.setDiameter(diameter);
+					newLine.add(cn);
+				}
 
 				for (CommitFile cf : c.getFiles()) {
 					String filename = cf.getFilename();
 					String mode = cf.getMode();
 					int x = parse.getTotalFiles().indexOf(filename);
-					if (mode.equals("A"))
-						swing.circles.get(x).touchGreen();
-					else if (mode.equals("M"))
-						swing.circles.get(x).touchBlue();
+
+					if (mode.equals("A")) {
+						newLine.get(x).touchGreen();
+					} else if (mode.equals("M"))
+						newLine.get(x).touchBlue();
 					else if (mode.equals("D"))
-						swing.circles.get(x).touchRed();
+						newLine.get(x).touchRed();
 					else
-						swing.circles.get(x).touchWhite();
+						newLine.get(x).touchWhite();
+
 				}
+				wf.AddLine(newLine);
 			} else {
 				System.out.println("Finished");
 				quit = true;
 			}
 
-			swing.Decay();
-			swing.repaint();
+			wf.repaint();
 
 			try {
 				Thread.sleep(50);
@@ -62,5 +80,4 @@ public class ProcessTest implements Runnable {
 			}
 		}
 	}
-
 }

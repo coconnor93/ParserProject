@@ -4,11 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
-
 import javax.swing.*;
-
 import testProj.ParserTest.Commit;
-import testProj.ParserTest.CommitFile;
 
 public class GUI extends JFrame {
 
@@ -79,64 +76,22 @@ public class GUI extends JFrame {
 		JLabel spiral = new JLabel();
 		spiral.setIcon(new ImageIcon(getClass().getResource(spiralURL)));
 		panel.add(spiral);
-		spiral.addMouseListener(new MouseAdapter(){
-			public void mousePressed(MouseEvent me){
-				try {
-					parse.readFile(selectedProject);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					System.exit(0);
-				}
-				commitIterator = parse.getCommits().iterator();
-				boolean quit = false;
-				swing = new SwingTest(parse.getTotalFileCount());
-
-				while (!quit) {
-					if (commitIterator.hasNext()) {
-						Commit c = commitIterator.next();
-
-						for (CommitFile cf : c.getFiles()) {
-							String filename = cf.getFilename();
-							String mode = cf.getMode();
-							int x = parse.getTotalFiles().indexOf(filename);
-							if (mode.equals("A"))
-								swing.circles.get(x).touchGreen();
-							else if (mode.equals("M"))
-								swing.circles.get(x).touchBlue();
-							else if (mode.equals("D"))
-								swing.circles.get(x).touchRed();
-							else
-								swing.circles.get(x).touchWhite();
-						}
-					} else {
-						System.out.println("Finished");
-						quit = true;
-					}
-
-					swing.Decay();
-					swing.repaint();
-
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
+		spiral.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				System.out.println(me);
 			}
 		});
-		
+
 		JLabel waterfall = new JLabel();
 		waterfall.setIcon(new ImageIcon(getClass().getResource(waterfallURL)));
 		panel.add(waterfall);
-		waterfall.addMouseListener(new MouseAdapter(){
-			public void mousePressed(MouseEvent me){
+		waterfall.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
 				System.out.println(me);
 			}
 		});
 		panel.validate();
 		panel.repaint();
-
 	}
 
 	public static void main(String[] args) {

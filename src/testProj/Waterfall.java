@@ -4,34 +4,27 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.Timer;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Waterfall extends JPanel {
-	
+
 	private static final long serialVersionUID = 1L;
 	private SwingTest swing = null;
-	private final int DELAY = 1000;
-	private Timer timer;
-	private ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
+	ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
 	private int x;
 	private int y;
 	private int diameter;
 	private int numberOfCircles = 40;
-	private int maxRows = 20;
+	private int maxRows = 50;
 	int height = 1000;
 	int width = 1000;
 	private boolean quit = false;
 
 	public Waterfall() {
 		initUI();
-		// initTimer();
 		initCircles();
 	}
 
@@ -45,25 +38,20 @@ public class Waterfall extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-	}
-
-	private void initTimer() {
-		timer = new Timer(DELAY, new TaskPerformed());
-		timer.start();
+		panel.setBackground(Color.DARK_GRAY);
 	}
 
 	public void initCircles() {
 		x = (int) Math.ceil(Math.sqrt((double) numberOfCircles));
 		y = x;
 		diameter = (250 / x) - 1;
-
+/*
 		for (int h = 0; h < 1; h++) {
-
 			AddLine(RandomLine(numberOfCircles));
 		}
-
+*/
+/*
 		while (!quit) {
-
 			this.repaint();
 
 			try {
@@ -74,7 +62,7 @@ public class Waterfall extends JPanel {
 
 			AddLine(RandomLine(numberOfCircles));
 		}
-
+*/
 	}
 
 	public void AddLine(ArrayList<Circle> newLine) {
@@ -104,11 +92,10 @@ public class Waterfall extends JPanel {
 		for (ArrayList<Circle> line : circles) {
 			for (Circle c : line) {
 				g.setColor(c.getColor());
-				g.fillOval(c.xValue, c.yValue + (row * (diameter + 1)), c.diameter, c.diameter);
+				g.fillOval(c.xValue, c.yValue + (row * (c.diameter + 1)), c.diameter, c.diameter);
 			}
 			row++;
 		}
-
 	}
 
 	public ArrayList<Circle> RandomLine(int n) {
@@ -119,7 +106,6 @@ public class Waterfall extends JPanel {
 		Random r = new Random();
 
 		for (int i = 0; i < n; i++) {
-			// Circle c = swing.new Circle();
 			Circle c = new Circle();
 			c.yValue = 0;
 			c.xValue = i * (diameter + 1);
@@ -148,17 +134,13 @@ public class Waterfall extends JPanel {
 
 		return newLine;
 	}
-
-	class TaskPerformed implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (!isShowing() && timer != null && timer.isRunning()) {
-				timer.stop();
-			} else {
-				initCircles();
-			}
-		}
+	
+	public void Decay() {
+		for (ArrayList<Circle> line: circles)
+			for (Circle c : line)
+				c.Decay();
 	}
+
 
 	public static void main(String[] args) {
 		Waterfall ex = new Waterfall();

@@ -164,7 +164,7 @@ public class ParserTest {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		ParserTest test = new ParserTest();
-		test.readFile("C:\\Users\\Smithers\\gitdemo\\jsoniterator\\log.txt");
-		//test.readFile("C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt");
+		//test.readFile("C:\\Users\\Smithers\\gitdemo\\jsoniterator\\log.txt");
+		test.readFile("C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt");
 	}
 }

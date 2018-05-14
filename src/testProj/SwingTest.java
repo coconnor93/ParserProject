@@ -1,96 +1,9 @@
 package testProj;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.*;
 
-public class SwingTest extends JPanel implements Runnable, KeyListener {
-	/*
-	public class Circle {
-		int xValue;
-		int yValue;
-		int diameter;
-		Color colour;
-
-		public int getxValue() {
-			return xValue;
-		}
-
-		public void setxValue(int xValue) {
-			this.xValue = xValue;
-		}
-
-		public int getyValue() {
-			return yValue;
-		}
-
-		public void setyValue(int yValue) {
-			this.yValue = yValue;
-		}
-
-		public int getDiameter() {
-			return diameter;
-		}
-
-		public void setDiameter(int diameter) {
-			this.diameter = diameter;
-		}
-
-		public Color getColour() {
-			return colour;
-		}
-
-		public void setColour(Color colour) {
-			this.colour = colour;
-		}
-
-		int redValue;
-		int greenValue;
-		int blueValue;
-		int decayRate = 10;
-
-		public void touchWhite() {
-			redValue = 255;
-			greenValue = 255;
-			blueValue = 255;
-		}
-
-		public void touchRed() {
-			redValue = 255;
-			greenValue = 0;
-			blueValue = 0;
-		}
-
-		public void touchBlue() {
-			redValue = 0;
-			greenValue = 0;
-			blueValue = 255;
-		}
-
-		public void touchGreen() {
-			redValue = 0;
-			greenValue = 255;
-			blueValue = 0;
-		}
-
-		public void Decay() {
-			redValue -= decayRate;
-			if (redValue < 0)
-				redValue = 0;
-			greenValue -= decayRate;
-			if (greenValue < 0)
-				greenValue = 0;
-			blueValue -= decayRate;
-			if (blueValue < 0)
-				blueValue = 0;
-		}
-
-		public Color getColor() {
-			colour = new Color(redValue, greenValue, blueValue);
-			return colour;
-		}
-	}*/
+public class SwingTest extends JPanel implements Runnable {
 
 	java.util.List<Circle> circles;
 	int number;
@@ -101,8 +14,8 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 	int diameter;
 	boolean quit = false;
 	private static final long serialVersionUID = 1L;
-	
-	private void initUI(){
+
+	private void initUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = this;
 		frame.setContentPane(panel);
@@ -134,13 +47,13 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 			circles.add(c);
 		}
 
-		//this.run();
+		// this.run();
 	}
 
 	@Override
 	public synchronized void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		//setBackground(new Color(0x17202a));
+		// setBackground(new Color(0x17202a));
 		setBackground(Color.white);
 		int angle = 25;
 		int initialRadius = 6;
@@ -161,7 +74,7 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 			g.fillOval(xp, yp, c.diameter, c.diameter);
 			angle += angleStep;
 			radius += radiusIncrease;
-		
+
 		}
 	}
 
@@ -185,19 +98,9 @@ public class SwingTest extends JPanel implements Runnable, KeyListener {
 			}
 		}
 	}
-	
-	public void Decay()
-	{
+
+	public void Decay() {
 		for (Circle c : circles)
 			c.Decay();
 	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
-
-	@Override
-	public void keyTyped(KeyEvent e) {}
 }
