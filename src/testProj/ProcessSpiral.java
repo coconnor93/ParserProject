@@ -1,23 +1,20 @@
 package testProj;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Iterator;
-
 import testProj.Parser.Commit;
 import testProj.Parser.CommitFile;
 
-public class ProcessWaterfall implements Runnable,Visualisation {
+public class ProcessSpiral implements Runnable,Visualisation {
 
 	private String filePath = "C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt";
 	private Parser parse = new Parser();
-	private Waterfall wf = new Waterfall();
+	private Spiral swing = null;
 	private Iterator<Commit> commitIterator;
-	private Circle c = new Circle();
 	private int duration = 50;
 
-	public static void main(String[] args) throws FileNotFoundException {
-		ProcessWaterfall p = new ProcessWaterfall();
+	public static void main(String args[]) throws FileNotFoundException {
+		ProcessSpiral p = new ProcessSpiral();
 		p.run();
 	}
 
@@ -25,53 +22,41 @@ public class ProcessWaterfall implements Runnable,Visualisation {
 		try {
 			parse.readFile(filePath);
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
 
-		//int a = parse.getCommits().size() - 1;
 		commitIterator = parse.getCommits().iterator();
-		
 		boolean quit = false;
+		swing = new Spiral(parse.getTotalFileCount());
 
 		while (!quit) {
 			if (commitIterator.hasNext()) {
-				wf.Decay();
 				Commit c = commitIterator.next();
-				ArrayList<Circle> newLine = new ArrayList<Circle>();
-
-				for (int i = 0; i < parse.getTotalFileCount(); ++i) {
-					int xrange = 1000;
-					int diameter = xrange / parse.getTotalFileCount();
-					Circle cn = new Circle();
-					cn.xValue = (diameter + 1) * i;
-					cn.yValue = 0;
-					cn.setDiameter(diameter);
-					newLine.add(cn);
-				}
 
 				for (CommitFile cf : c.getFiles()) {
 					String filename = cf.getFilename();
+					System.out.println(filename);
 					String mode = cf.getMode();
 					int x = parse.getTotalFiles().indexOf(filename);
-
-					if (mode.equals("A")) {
-						newLine.get(x).touchGreen();
-					} else if (mode.equals("M"))
-						newLine.get(x).touchBlue();
+					if (mode.equals("A"))
+						swing.circles.get(x).touchGreen();
+					else if (mode.equals("M"))
+						swing.circles.get(x).touchBlue();
 					else if (mode.equals("D"))
-						newLine.get(x).touchRed();
+						swing.circles.get(x).touchRed();
 					else
-						newLine.get(x).touchWhite();
-
+						swing.circles.get(x).touchWhite();
 				}
-				wf.AddLine(newLine);
 			} else {
 				System.out.println("Finished");
 				quit = true;
 			}
 
-			wf.repaint();
+			swing.Decay();
+			swing.repaint();
+			System.out.println("Repaint");
 
 			try {
 				Thread.sleep(duration);
@@ -83,8 +68,7 @@ public class ProcessWaterfall implements Runnable,Visualisation {
 
 	@Override
 	public void setDuration(int duration) {
-		this.duration = duration;
-		
+		this.duration = duration;		
 	}
 
 	@Override
@@ -98,4 +82,5 @@ public class ProcessWaterfall implements Runnable,Visualisation {
 		this.run();
 		
 	}
+
 }

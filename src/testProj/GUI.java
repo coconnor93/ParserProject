@@ -8,15 +8,18 @@ import javax.swing.*;
 public class GUI extends JFrame {
 
 	private String[] filePaths = { "C:\\Users\\Smithers\\gitdemo\\jsoniterator\\log.txt",
-			"C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt" };
+			"C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt", "C:\\Users\\Smithers\\gitdemo\\boon\\log.txt" };
 	private int height = 800;
 	private int width = 800;
 	private JComboBox<String> projects = new JComboBox<String>(filePaths);
 	private String spiralURL = "/images/spiral.png", waterfallURL = "/images/waterfall.jpg";
 	private int align = 10, hgap = 10, vgap = 100;
 	FlowLayout flowLayout = new FlowLayout(align, hgap, vgap);
-	private ParserTest parse;
-	private SwingTest swing = null;
+	private Parser parse = new Parser();
+	private Spiral swing = null;
+	//private ProcessWaterfall wfVis = new ProcessWaterfall();
+	//private ProcessTest spiralVis = new ProcessTest();
+	private Visualisation vis;
 	private String selectedProject;
 
 	public GUI() {
@@ -55,6 +58,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				JComboBox<String> combo = (JComboBox<String>) event.getSource();
 				selectedProject = (String) combo.getSelectedItem();
+				/*
 				if (selectedProject == "C:\\Users\\Smithers\\gitdemo\\jsoniterator\\log.txt") {
 					try {
 						parse.readFile(selectedProject);
@@ -67,7 +71,14 @@ public class GUI extends JFrame {
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
+				}  else if (selectedProject == "C:\\Users\\Smithers\\gitdemo\\boon\\log.txt") {
+					try {
+						parse.readFile(selectedProject);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
+				*/
 			}
 		});
 		JLabel spiral = new JLabel();
@@ -75,7 +86,11 @@ public class GUI extends JFrame {
 		panel.add(spiral);
 		spiral.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
-				System.out.println(me);
+				
+				ProcessSpiral v = new ProcessSpiral();
+				v.setFilepath(selectedProject);
+				//v.run();
+				
 			}
 		});
 
@@ -84,7 +99,9 @@ public class GUI extends JFrame {
 		panel.add(waterfall);
 		waterfall.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
-				System.out.println(me);
+				vis = new ProcessWaterfall();
+				vis.setFilepath(selectedProject);
+				vis.Start();
 			}
 		});
 		panel.validate();

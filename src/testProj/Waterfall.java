@@ -1,18 +1,22 @@
 package testProj;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Waterfall extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private SwingTest swing = null;
+	private Spiral swing = null;
 	ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
 	private int x;
 	private int y;
@@ -22,6 +26,7 @@ public class Waterfall extends JPanel {
 	int height = 1000;
 	int width = 1000;
 	private boolean quit = false;
+	private String legendURL = "/images/legend.png";
 
 	public Waterfall() {
 		initUI();
@@ -31,6 +36,11 @@ public class Waterfall extends JPanel {
 	private void initUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = this;
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		JLabel legend = new JLabel();
+		legend.setIcon(new ImageIcon(getClass().getResource(legendURL)));
+		bottomPanel.add(legend, BorderLayout.PAGE_END);
+		panel.add(bottomPanel);
 		frame.setContentPane(panel);
 		frame.setTitle("Project Display");
 		frame.pack();
@@ -38,7 +48,7 @@ public class Waterfall extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		panel.setBackground(Color.DARK_GRAY);
+		panel.setBackground(Color.black);
 	}
 
 	public void initCircles() {
