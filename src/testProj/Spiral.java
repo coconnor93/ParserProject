@@ -3,8 +3,17 @@ package testProj;
 import java.awt.*;
 import javax.swing.*;
 
-public class Spiral extends JPanel implements Runnable {
 
+/**
+ * Class that contains the functionality of the spiral visualisation technique
+ * @author Christopher O'Connor
+ * @version 1.0
+ *
+ */
+
+public class Spiral extends JPanel  {
+	
+	//Declaration of variables used
 	java.util.List<Circle> circles;
 	int number;
 	int x;
@@ -15,6 +24,10 @@ public class Spiral extends JPanel implements Runnable {
 	boolean quit = false;
 	private static final long serialVersionUID = 1L;
 	private String legendURL = "/images/legend.png";
+	
+	/**
+	 * Method that creates the frame and panel the visualisation technique will be drawn upon
+	 */
 
 	private void initUI() {
 		JFrame frame = new JFrame();
@@ -32,7 +45,12 @@ public class Spiral extends JPanel implements Runnable {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
-
+	
+	/**
+	 * Constructor that takes in the number of circles we want to print out as a parameter and 
+	 * calculates the X, Y and diameter variables of each individual circle
+	 * @param n The number of circles contained with the spiral
+	 */
 	public Spiral(int n) {
 		initUI();
 		number = n;
@@ -53,11 +71,18 @@ public class Spiral extends JPanel implements Runnable {
 			circles.add(c);
 		}
 	}
+	
+	/**
+	 * The paintComponent method contains the functionality needed to physically draw the circles on screen.
+	 * The spiral itself is calculated by using sine and cosine algorithms. The starting angle increments each
+	 * time until it hits 360 degrees, then resets. The radius variable consistently iterates each time a new circle
+	 * is drawn to screen to widen the arc of the spiral.
+	 */
 
 	@Override
 	public synchronized void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		setBackground(Color.black);
+		setBackground(Color.DARK_GRAY);
 		int angle = 25;
 		int initialRadius = 6;
 		int radiusIncrease = 2;
@@ -80,28 +105,18 @@ public class Spiral extends JPanel implements Runnable {
 
 		}
 	}
+	/**
+	 * The main method used to instigate a new instance of the spiral technique
+	 * @param args
+	 */
 
 	public static void main(String[] args) {
 		Spiral test = new Spiral(150);
 	}
 
-	@Override
-	public void run() {
-		while (!quit) {
-
-			for (Circle c : circles)
-				c.Decay();
-
-			this.repaint();
-
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
+	/**
+	 * Method used to call the decay method from the circle class
+	 */
 	public void Decay() {
 		for (Circle c : circles)
 			c.Decay();

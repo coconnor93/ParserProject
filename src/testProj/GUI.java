@@ -5,10 +5,25 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import javax.swing.*;
 
+/**
+ * The user interface that contains all the functionality of the system
+ * @author Christopher O'Connor
+ * @version 1.0
+ */
 public class GUI extends JFrame {
+	
+	/**
+	 * Declaration variables for the UI, includes:
+	 * The ArrayList of filePaths the user will have the choice of.
+	 * Variables of window size and layout of UI.
+	 * Images included within UI.
+	 * Instance of Parser class and Visualisation interface.
+	 * selectedProject the project that the user selected from the drop-down list.
+	 */
 
 	private String[] filePaths = { "C:\\Users\\Smithers\\gitdemo\\jsoniterator\\log.txt",
-			"C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt", "C:\\Users\\Smithers\\gitdemo\\boon\\log.txt" };
+			"C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt", "C:\\Users\\Smithers\\gitdemo\\boon\\log.txt",
+			"C:\\Users\\Smithers\\gitdemo\\Java_1\\log.txt"};
 	private int height = 800;
 	private int width = 800;
 	private JComboBox<String> projects = new JComboBox<String>(filePaths);
@@ -16,15 +31,20 @@ public class GUI extends JFrame {
 	private int align = 10, hgap = 10, vgap = 100;
 	FlowLayout flowLayout = new FlowLayout(align, hgap, vgap);
 	private Parser parse = new Parser();
-	private Spiral swing = null;
-	//private ProcessWaterfall wfVis = new ProcessWaterfall();
-	//private ProcessTest spiralVis = new ProcessTest();
 	private Visualisation vis;
 	private String selectedProject;
+	
+	/**
+	 * Constructor that calls the initUI method that contains the design of the UI
+	 */
 
 	public GUI() {
 		initUI();
 	}
+	
+	/**
+	 * Method that creates the main frame and panel that the functionality of the UI will contain.
+	 */
 
 	public void initUI() {
 		JFrame frame = new JFrame();
@@ -38,7 +58,6 @@ public class GUI extends JFrame {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		panel.setBackground(Color.PINK);
-
 		panel.setLayout(flowLayout);
 		flowLayout.setAlignment(FlowLayout.CENTER);
 		JLabel title = new JLabel("SOFTWARE VISUALISATION");
@@ -53,44 +72,29 @@ public class GUI extends JFrame {
 		projects.setForeground(Color.BLUE);
 		projects.setEditable(false);
 		projects.addActionListener(new ActionListener() {
-
+			/**
+			 * Method that ensures the project selected by the user from the drop-down
+			 * list will be the one queried through the selected visualisation technique
+			 */
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				JComboBox<String> combo = (JComboBox<String>) event.getSource();
 				selectedProject = (String) combo.getSelectedItem();
-				/*
-				if (selectedProject == "C:\\Users\\Smithers\\gitdemo\\jsoniterator\\log.txt") {
-					try {
-						parse.readFile(selectedProject);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				} else if (selectedProject == "C:\\Users\\Smithers\\gitdemo\\interviews\\log.txt") {
-					try {
-						parse.readFile(selectedProject);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				}  else if (selectedProject == "C:\\Users\\Smithers\\gitdemo\\boon\\log.txt") {
-					try {
-						parse.readFile(selectedProject);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-				*/
 			}
 		});
 		JLabel spiral = new JLabel();
 		spiral.setIcon(new ImageIcon(getClass().getResource(spiralURL)));
 		panel.add(spiral);
 		spiral.addMouseListener(new MouseAdapter() {
+			/**
+			 * Method that ensures that the spiral visualisation will execute when
+			 * the user selects a project and the spiral image
+			 */
 			public void mousePressed(MouseEvent me) {
-				
-				ProcessSpiral v = new ProcessSpiral();
-				v.setFilepath(selectedProject);
-				//v.run();
-				
+				vis = new ProcessSpiral();
+				vis.setFilepath(selectedProject);
+				frame.setVisible(false);
+				vis.Start();
 			}
 		});
 
@@ -98,17 +102,27 @@ public class GUI extends JFrame {
 		waterfall.setIcon(new ImageIcon(getClass().getResource(waterfallURL)));
 		panel.add(waterfall);
 		waterfall.addMouseListener(new MouseAdapter() {
+			/**
+			 * Method that ensures that the waterfall visualisation will execute when
+			 * the user selects a project and the waterfall image
+			 */
 			public void mousePressed(MouseEvent me) {
 				vis = new ProcessWaterfall();
 				vis.setFilepath(selectedProject);
+				frame.setVisible(false);
 				vis.Start();
 			}
 		});
 		panel.validate();
 		panel.repaint();
 	}
+	
+	/**
+	 * Main method that instigates a new instance of the GUI
+	 * @param args
+	 */
 
 	public static void main(String[] args) {
-		GUI test = new GUI();
+		new GUI();
 	}
 }

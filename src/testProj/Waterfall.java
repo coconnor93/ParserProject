@@ -13,8 +13,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Waterfall extends JPanel {
+/**
+ * Class that contains the functionality of the waterfall visualisation technique
+ * @author Christopher O'Connor
+ * @version 1.0
+ *
+ */
 
+public class Waterfall extends JPanel {
+	
+	//Declaration of variables used
 	private static final long serialVersionUID = 1L;
 	private Spiral swing = null;
 	ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
@@ -27,20 +35,28 @@ public class Waterfall extends JPanel {
 	int width = 1000;
 	private boolean quit = false;
 	private String legendURL = "/images/legend.png";
-
+	
+	/**
+	 * Constructor that calls the methods to initialise the UI and the circles used in the animation
+	 */
 	public Waterfall() {
 		initUI();
 		initCircles();
 	}
+	
+	/**
+	 * Method that creates the frame and panel the visualisation technique will be drawn upon
+	 */
 
 	private void initUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = this;
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		JLabel legend = new JLabel();
+		/*JLabel legend = new JLabel();
 		legend.setIcon(new ImageIcon(getClass().getResource(legendURL)));
 		bottomPanel.add(legend, BorderLayout.PAGE_END);
 		panel.add(bottomPanel);
+		panel.repaint();*/
 		frame.setContentPane(panel);
 		frame.setTitle("Project Display");
 		frame.pack();
@@ -50,12 +66,20 @@ public class Waterfall extends JPanel {
 		frame.setVisible(true);
 		panel.setBackground(Color.black);
 	}
+	
+	/**
+	 * Method that calculates the X, Y and diameter values of the circles used
+	 */
 
 	public void initCircles() {
 		x = (int) Math.ceil(Math.sqrt((double) numberOfCircles));
 		y = x;
 		diameter = (250 / x) - 1;
 	}
+	/**
+	 * Method that creates a new ArrayList of circles to be drawn onto screen to continue the animation
+	 * @param newLine The new line of circles added that are contained with the ArrayList
+	 */
 
 	public void AddLine(ArrayList<Circle> newLine) {
 		circles.add(0, newLine);
@@ -64,6 +88,11 @@ public class Waterfall extends JPanel {
 			circles.remove(circles.size() - 1);
 		}
 	}
+	
+	/**
+	 * Method that copies the first line printed to screen in order to push it down to continue the animation
+	 * @return newLine The first line printed to screen
+	 */
 
 	public ArrayList<Circle> GetLastLineCopy() {
 		ArrayList<Circle> newLine = new ArrayList<Circle>();
@@ -72,6 +101,12 @@ public class Waterfall extends JPanel {
 		}
 		return newLine;
 	}
+	
+	/**
+	 * The paintComponent method contains the functionality that draws the circles to screen. Nested for loops
+	 * are used to traverse through every line contained in the overall circles ArrayList then the second loop travels 
+	 * through each circle contained within each line.
+	 */
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -90,49 +125,20 @@ public class Waterfall extends JPanel {
 		}
 	}
 
-	public ArrayList<Circle> RandomLine(int n) {
-		x = (int) Math.ceil(Math.sqrt((double) n));
-		y = x;
-		diameter = (250 / x) - 1;
-		ArrayList<Circle> newLine = new ArrayList<Circle>();
-		Random r = new Random();
-
-		for (int i = 0; i < n; i++) {
-			Circle c = new Circle();
-			c.yValue = 0;
-			c.xValue = i * (diameter + 1);
-			c.diameter = diameter;
-			c.redValue = 0;
-			c.greenValue = 0;
-			c.blueValue = 0;
-
-			int chance = r.nextInt(100);
-
-			if (chance <= 25) {
-				int x = r.nextInt(numberOfCircles);
-				c.touchWhite();
-			} else if (chance <= 50) {
-				int x = r.nextInt(numberOfCircles);
-				c.touchBlue();
-			} else if (chance <= 75) {
-				int x = r.nextInt(numberOfCircles);
-				c.touchRed();
-			} else if (chance <= 100) {
-				int x = r.nextInt(numberOfCircles);
-				c.touchGreen();
-			}
-			newLine.add(c);
-		}
-
-		return newLine;
-	}
-	
+	/**
+	 * This method uses nested for loops in the same way the paintComponent class does to traverse through
+	 * every circle used in the visualisation to call the decay() method in the Circle class
+	 */
 	public void Decay() {
 		for (ArrayList<Circle> line: circles)
 			for (Circle c : line)
 				c.Decay();
 	}
-
+	
+	/**
+	 * Main method to instigate a new instance of the waterfall visualisation
+	 * @param args
+	 */
 
 	public static void main(String[] args) {
 		Waterfall ex = new Waterfall();
